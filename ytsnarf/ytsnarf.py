@@ -4,6 +4,7 @@ import argparse
 from fabric.api import run, env
 from fabric.operations import get
 from fabric.network import ssh_config
+from fabric.state import output as fabric_output
 from cStringIO import StringIO
 
 try:
@@ -15,6 +16,9 @@ CONFIG_FILE = os.path.join(os.path.expanduser('~'), '.ytsnarfrc')
 VERSION = '0.0.1'
 URL = 'https://github.com/rsalmond/ytsnarf'
 PROGRAM = 'ytsnarf'
+
+class ProgramNotFound(Exception):
+    pass
 
 def read_config():
     config = ConfigParser()
@@ -61,10 +65,13 @@ def validate_host(args):
     return host
 
 def download(url):
+    result = run('which youtube-dl', warn_only=True)
+    if result == '':
+        raise ProgramNotFound
+
     tmpdir = run('mktemp -d /tmp/ytsnarf-tmp-XXXXXXXX')
     outdir = os.path.join('/tmp', tmpdir)
-    run('touch {}/bunk'.format(outdir))
-    run('youtube-dl --output={}/%\(title\)s.%\(ext\)s {}'.format(outdir, url))
+    run('youtube-dl --output={}/%\(title\)s.%\(ext\)s {}'.format(outdir, url), warn_only=True)
     get(os.path.join(outdir, '*'), local_path='.')
     run('rm -rf {}'.format(outdir))
 
@@ -72,6 +79,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run youtube-dl on a remote host and bring the resulting file back here.", add_help=False)
     parser.add_argument('-h', '--host', action='store', required=False)
     parser.add_argument('-p', '--params', action='store', required=False)
+    parser.add_argument('--verbose', action='store_true', required=False)
     parser.add_argument('--save-default', action='store_true', required=False)
     parser.add_argument('url', action='store', nargs='?', default=None)
 
@@ -86,10 +94,21 @@ if __name__ == '__main__':
 
     env.use_ssh_config = True
     env.host_string = host
+    
+    if not args.verbose:
+        fabric_output['stdout'] = False
+        fabric_output['stderr'] = False
+        fabric_output['status'] = False
+        fabric_output['aborts'] = False
+        fabric_output['warnings'] = False
+        fabric_output['running'] = False
 
     #XXX: does every ssh config actually need a user? (shrug)
     if ssh_config().get('user') is None:
         output('Host {} does not appear to be configured in your ssh config file, it must be configured for {} to work.'.format(host, PROGRAM))
         sys.exit(1)
 
-    download(args.url)
+    try:
+        download(args.url)
+    except ProgramNotFound:
+        output('Host {} does not appear to have youtube-dl installed. Please install it.'.format(host))
