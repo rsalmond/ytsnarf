@@ -20,6 +20,9 @@ PROGRAM = 'ytsnarf'
 class ProgramNotFound(Exception):
     pass
 
+class YoutubeDLError(Exception):
+    pass
+
 def read_config():
     config = ConfigParser()
     config.read(CONFIG_FILE)
@@ -71,9 +74,13 @@ def download(url):
 
     tmpdir = run('mktemp -d /tmp/ytsnarf-tmp-XXXXXXXX')
     outdir = os.path.join('/tmp', tmpdir)
-    run('youtube-dl --output={}/%\(title\)s.%\(ext\)s {}'.format(outdir, url), warn_only=True)
-    get(os.path.join(outdir, '*'), local_path='.')
-    run('rm -rf {}'.format(outdir))
+    result = run('youtube-dl --no-color --output={}/%\(title\)s.%\(ext\)s {}'.format(outdir, url), warn_only=True)
+    if 'ERROR' in result:
+        run('rm -rf {}'.format(outdir))
+        raise YoutubeDLError(result)
+    else:
+        get(os.path.join(outdir, '*'), local_path='.')
+        run('rm -rf {}'.format(outdir))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run youtube-dl on a remote host and bring the resulting file back here.", add_help=False)
@@ -112,3 +119,5 @@ if __name__ == '__main__':
         download(args.url)
     except ProgramNotFound:
         output('Host {} does not appear to have youtube-dl installed. Please install it.'.format(host))
+    except YoutubeDLError as e:
+        output(e.message)
