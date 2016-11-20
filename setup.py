@@ -11,7 +11,7 @@ setup(name='ytsnarf',
         'Programming Language :: Python :: 3',
         'Topic :: Multimedia :: Video',
     ],
-    keywords = 'youtube ssh remote'
+    keywords = 'youtube ssh remote',
     url='http://github.com/rsalmond/ytsnarf',
     author='Rob Salmond',
     author_email='rob@salmond.ca',
@@ -20,4 +20,5 @@ setup(name='ytsnarf',
     install_requires=[
         'fabric',
     ],
+    scripts = ['bin/ytsnarf'],
     zip_safe=True)

@@ -82,7 +82,7 @@ def download(url):
         get(os.path.join(outdir, '*'), local_path='.')
         run('rm -rf {}'.format(outdir))
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description="Run youtube-dl on a remote host and bring the resulting file back here.", add_help=False)
     parser.add_argument('-h', '--host', action='store', required=False)
     parser.add_argument('-p', '--params', action='store', required=False)
