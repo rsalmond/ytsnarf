@@ -18,7 +18,7 @@ setup(name='ytsnarf',
     license='MIT',
     packages=find_packages(),
     install_requires=[
-        'fabric',
+        'fabric==1.12.0',
     ],
     scripts = ['bin/ytsnarf'],
     zip_safe=True)
