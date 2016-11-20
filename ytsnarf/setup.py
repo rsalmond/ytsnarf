@@ -7,9 +7,11 @@ setup(name='ytsnarf',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Topic :: Multimedia :: Video',
     ],
+    keywords = 'youtube ssh remote'
     url='http://github.com/rsalmond/ytsnarf',
     author='Rob Salmond',
     author_email='rob@salmond.ca',
