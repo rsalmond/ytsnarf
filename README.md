@@ -20,7 +20,11 @@ Where `<my-host>` is some Linux machine for which you have an ssh config entry a
 
 `$ ytsnarf -h <my-host> --save-default`
 
-Creates ~/.ytsnarfrc and records your preferred server to use. With this set up you can now run: `ytsnarf https://www.youtube.com/watch?v=QH2-TGUlwu4`.
+Creates `~/.ytsnarfrc` and records your preferred server to use. With this set up you can now just run: 
+
+```
+ytsnarf https://www.youtube.com/watch?v=QH2-TGUlwu4
+```
 
 ## Under The Hood
 
