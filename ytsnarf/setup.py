@@ -9,7 +9,7 @@ setup(name='ytsnarf',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
         'Topic :: Multimedia :: Video',
-    ]
+    ],
     url='http://github.com/rsalmond/ytsnarf',
     author='Rob Salmond',
     author_email='rob@salmond.ca',
