@@ -44,7 +44,10 @@ def die_no_host_error():
     sys.exit(1)
 
 def validate_host(args):
-    """ ensure a host has been specified either on the cmdline or in the config file and return it """
+    """ 
+    ensure a host has been specified either on the cmdline or in the config file and return it
+    optionally save the provided host to config file (and exit)
+    """
     host = args.host
 
     if host is None:
@@ -85,7 +88,6 @@ def download(url):
 def main():
     parser = argparse.ArgumentParser(description="Run youtube-dl on a remote host and bring the resulting file back here.", add_help=False)
     parser.add_argument('-h', '--host', action='store', required=False)
-    parser.add_argument('-p', '--params', action='store', required=False)
     parser.add_argument('--verbose', action='store_true', required=False)
     parser.add_argument('--save-default', action='store_true', required=False)
     parser.add_argument('url', action='store', nargs='?', default=None)
@@ -96,7 +98,7 @@ def main():
     host = validate_host(args)
 
     if args.url is None:
-        output('No URL Specified, quitting.')
+        parser.print_help()
         sys.exit(1)
 
     env.use_ssh_config = True
