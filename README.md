@@ -1,3 +1,7 @@
+**UPDATE**
+
+LOL after I sat back and thought about it for a moment I replaced this whole thing with a [three line shell script](https://gist.github.com/rsalmond/05abf0dbdf06e16e352b454f124be9ab).
+
 # ytsnarf
 youtube-dl + ssh solution to "The uploader has not made this video available in your country."
 
